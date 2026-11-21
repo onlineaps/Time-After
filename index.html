@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Time After</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#f4f6f9">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="icon" type="image/png" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<style>
+:root{
+  --bg:#f4f6f9; --card:#ffffff; --ink:#1c232b; --muted:#8b95a1; --line:#dde3ea;
+  --accent:#3682c8; --accent-ink:#ffffff; --warm:#d9700f; --warm-ink:#ffffff; --soft:#e9eff6; --err:#b3261e;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+  color-scheme:light;
+}
+:root[data-theme="dark"]{
+  --bg:#000000; --card:#0f1114; --ink:#eef2f6; --muted:#6c7683; --line:#232830;
+  --accent:#7db9ee; --accent-ink:#06121f; --warm:#f2a35e; --warm-ink:#1d1002; --soft:#1a1e24; --err:#ff8a80;
+  color-scheme:dark;
+}
+:root.calc{--accent:var(--warm);--accent-ink:var(--warm-ink)}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%}
+body{-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent;background:var(--bg);color:var(--ink);font-family:"Segoe UI",system-ui,-apple-system,Roboto,"Noto Sans Bengali",sans-serif;display:flex;justify-content:center;padding:6px 16px 24px;transition:background .25s,color .25s}
+.wrap{width:100%;max-width:420px}
+header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+h1{font-size:20px;margin:0;font-weight:700}
+button{font-family:inherit}
+#theme{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:8px 14px;font-size:14px;cursor:pointer}
+button:focus-visible,#q:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.result{margin-bottom:10px;background:var(--accent);color:var(--accent-ink);border-radius:16px;padding:14px;text-align:center;height:120px;display:flex;flex-direction:column;justify-content:center}
+.result .big{font-size:36px;font-weight:700;font-variant-numeric:tabular-nums}
+.result .sub{font-size:15px;opacity:.92;margin-top:4px}
+.result.calc{background:var(--warm);color:var(--warm-ink)}
+.result.empty{background:var(--card);color:var(--muted);border:1px dashed var(--line)}
+.result.error{background:var(--card);color:var(--err);border:1px solid var(--err)}
+
+.picker{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px;margin-bottom:12px}
+.seg{display:flex;background:var(--soft);border-radius:12px;padding:3px;margin-bottom:10px}
+.seg button{flex:1;border:0;background:transparent;color:var(--muted);padding:9px;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+.cols{display:flex;gap:10px}
+.col{flex:1;text-align:center}
+.lbl{font-size:13px;color:var(--muted);margin-bottom:2px}
+.wbox{position:relative;height:192px}
+.wbox::before{content:"";position:absolute;left:0;right:0;top:64px;height:64px;background:var(--soft);border-radius:16px}
+.wheel{position:relative;height:100%;overflow-y:scroll;overscroll-behavior:contain;touch-action:pan-y;scrollbar-width:none;-webkit-overflow-scrolling:touch;
+  -webkit-mask-image:linear-gradient(transparent,#000 28%,#000 72%,transparent);mask-image:linear-gradient(transparent,#000 28%,#000 72%,transparent)}
+.wheel::-webkit-scrollbar{display:none}
+.sp{height:64px}
+.it{height:64px;line-height:64px;font-size:34px;font-weight:600;color:var(--muted);font-variant-numeric:tabular-nums;cursor:pointer}
+.it.on{color:var(--ink);font-size:52px;font-weight:700}
+
+.qrow{display:flex;gap:8px;margin-bottom:10px}
+#q{user-select:text;-webkit-user-select:text;flex:1;min-width:0;font-size:20px;padding:12px 16px;border-radius:14px;border:1.5px solid var(--line);background:var(--card);color:var(--ink)}
+#q::placeholder{color:var(--muted);font-size:15px}
+#reset{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:14px;padding:0 16px;font-size:15px;font-weight:600;cursor:pointer}
+#reset:active{background:var(--accent);color:var(--accent-ink)}
+[hidden]{display:none!important}
+header{position:relative}
+.hbtns{display:flex;gap:8px;align-items:center}
+#gear{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;width:40px;height:36px;font-size:17px;cursor:pointer}
+.panel{position:absolute;right:0;top:calc(100% + 6px);width:270px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px;box-shadow:0 8px 28px rgba(0,0,0,.28);z-index:40}
+.ptitle{font-weight:700;margin-bottom:8px}
+.pbtn{width:100%;border:0;background:var(--accent);color:var(--accent-ink);border-radius:12px;padding:11px;font-size:15px;font-weight:600;cursor:pointer}
+.pnote{color:var(--muted);font-size:13px;line-height:1.5}
+.ibanner{position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));max-width:396px;margin:0 auto;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:10px 10px 10px 14px;display:flex;align-items:center;gap:8px;box-shadow:0 6px 24px rgba(0,0,0,.3);z-index:30}
+.itxt{flex:1;font-size:14px;line-height:1.35}
+.ibtn{border:0;background:var(--accent);color:var(--accent-ink);border-radius:10px;padding:9px 14px;font-size:14px;font-weight:600;cursor:pointer}
+.ix{border:0;background:transparent;color:var(--muted);font-size:18px;padding:6px 8px;cursor:pointer}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Time After</h1>
+    <div class="hbtns">
+      <button id="gear" type="button" aria-label="Settings" aria-expanded="false">⚙</button>
+      <button id="theme" type="button" aria-label="Theme toggle">🌙 Dark</button>
+    </div>
+    <div id="panel" class="panel" hidden>
+      <div class="ptitle">Settings</div>
+      <button id="sinstall" type="button" class="pbtn" hidden>📲 Install app</button>
+      <div id="snote" class="pnote"></div>
+    </div>
+  </header>
+
+  <div id="res" class="result" aria-live="polite"></div>
+
+  <div class="qrow">
+    <input id="q" type="text" autocomplete="off" autocapitalize="off" placeholder="অথবা লিখুন: 4h, 30m, 2h 30m, -2h, 1d" aria-label="Duration">
+    <button id="reset" type="button" aria-label="Reset">Reset</button>
+  </div>
+
+  <div class="picker">
+    <div class="seg" role="group" aria-label="Direction">
+      <button type="button" id="after" aria-pressed="true">After</button>
+      <button type="button" id="before" aria-pressed="false">Before</button>
+    </div>
+    <div class="cols">
+      <div class="col"><div class="lbl">Day</div><div class="wbox"><div class="wheel" id="wd" role="listbox" aria-label="Day"></div></div></div>
+      <div class="col"><div class="lbl">Hour</div><div class="wbox"><div class="wheel" id="wh" role="listbox" aria-label="Hour"></div></div></div>
+      <div class="col"><div class="lbl">Minute</div><div class="wbox"><div class="wheel" id="wm" role="listbox" aria-label="Minute"></div></div></div>
+    </div>
+  </div>
+
+</div>
+
+<div id="ibanner" class="ibanner" hidden>
+  <div class="itxt">📲 Time After হোম স্ক্রিনে install করুন</div>
+  <button id="ibtn" type="button" class="ibtn">Install</button>
+  <button id="idismiss" type="button" class="ix" aria-label="Close">✕</button>
+</div>
+
+<script>
+(function(){
+  var root=document.documentElement, btn=document.getElementById('theme');
+  var q=document.getElementById('q'), res=document.getElementById('res');
+  var bAfter=document.getElementById('after'), bBefore=document.getElementById('before');
+
+  var BN_DIGITS=['০','১','২','৩','৪','৫','৬','৭','৮','৯'];
+  var BN_MONTHS=['জানুয়ারি','ফেব্রুয়ারি','মার্চ','এপ্রিল','মে','জুন','জুলাই','আগস্ট','সেপ্টেম্বর','অক্টোবর','নভেম্বর','ডিসেম্বর'];
+  var BN_DAYS=['রবিবার','সোমবার','মঙ্গলবার','বুধবার','বৃহস্পতিবার','শুক্রবার','শনিবার'];
+  function bn(n){return String(n).replace(/\d/g,function(d){return BN_DIGITS[+d];});}
+  function bnDate(d){return BN_DAYS[d.getDay()]+', '+bn(d.getDate())+' '+BN_MONTHS[d.getMonth()];}
+
+  /* theme (default light) */
+  function setTheme(t){
+    if(t==='dark'){root.setAttribute('data-theme','dark');btn.textContent='☀️ Light';}
+    else{root.removeAttribute('data-theme');btn.textContent='🌙 Dark';}
+    var tm=document.querySelector('meta[name=theme-color]'); if(tm) tm.setAttribute('content',t==='dark'?'#000000':'#f4f6f9');
+  }
+  var saved=null; try{saved=localStorage.getItem('timeafter-theme');}catch(e){}
+  setTheme(saved==='dark'?'dark':'light');
+  btn.addEventListener('click',function(){
+    var next=root.getAttribute('data-theme')==='dark'?'light':'dark';
+    setTheme(next); try{localStorage.setItem('timeafter-theme',next);}catch(e){}
+  });
+
+  function p2(n){return n<10?'0'+n:''+n;}
+  function fmt(d,secs){
+    var h=d.getHours(), ap=h>=12?'PM':'AM'; h=h%12; if(h===0)h=12;
+    return p2(h)+':'+p2(d.getMinutes())+(secs?':'+p2(d.getSeconds()):'')+' '+ap;
+  }
+  function dayStart(d){return new Date(d.getFullYear(),d.getMonth(),d.getDate()).getTime();}
+  function dateLabel(t,now){
+    var diff=Math.round((dayStart(t)-dayStart(now))/86400000);
+    var ds=bnDate(t);
+    if(diff===0) return 'আজই · '+ds;
+    if(diff===1) return 'আগামীকাল · '+ds;
+    if(diff===-1) return 'গতকাল · '+ds;
+    if(diff>1) return bn(diff)+' দিন পর · '+ds;
+    return bn(Math.abs(diff))+' দিন আগে · '+ds;
+  }
+
+  /* parse "4h", "2h 30m", "-2h", "1d 3h", "90m" */
+  function parse(s){
+    s=s.trim().toLowerCase().replace(/,/g,' ');
+    if(!s) return null;
+    var sign=1;
+    if(s[0]==='-'){sign=-1;s=s.slice(1).trim();}
+    else if(s[0]==='+'){s=s.slice(1).trim();}
+    var re=/(\d+(?:\.\d+)?)\s*(d|h|m)/g, m, total=0, used=0;
+    while((m=re.exec(s))!==null){
+      var v=parseFloat(m[1]);
+      total+= m[2]==='d'?v*1440 : m[2]==='h'?v*60 : v;
+      used+=m[0].length;
+    }
+    var rest=s.replace(re,'').replace(/\s+/g,'');
+    if(used===0||rest.length>0) return undefined;
+    return sign*total;
+  }
+
+  /* ---- looping scroll wheels (like a phone alarm picker) ---- */
+  var ITEM=64, COPIES=31, MID=15, lock=0, touching=false;
+  document.addEventListener('touchstart',function(){touching=true;},{passive:true});
+  ['touchend','touchcancel'].forEach(function(ev){document.addEventListener(ev,function(){touching=false;},{passive:true});});
+  function Wheel(id,n,pad){
+    var self=this, el=document.getElementById(id), i, v, d, frag=document.createDocumentFragment(), timer=null;
+    self.el=el; self.n=n; self.val=0; self.idx=MID*n; self.items=[];
+    function sp(){var s=document.createElement('div');s.className='sp';return s;}
+    frag.appendChild(sp());
+    for(i=0;i<n*COPIES;i++){
+      v=i%n; d=document.createElement('div'); d.className='it'; d.setAttribute('role','option');
+      d.textContent=(pad&&v<10)?('0'+v):v; d.setAttribute('data-i',i);
+      frag.appendChild(d); self.items.push(d);
+    }
+    frag.appendChild(sp());
+    el.appendChild(frag);
+    self.items[self.idx].className='it on';
+    el.addEventListener('click',function(e){
+      var t=e.target.closest?e.target.closest('.it'):null;
+      if(t) el.scrollTo({top:(+t.getAttribute('data-i'))*ITEM,behavior:'smooth'});
+    });
+    function settle(){
+      if(touching){timer=setTimeout(settle,120);return;}
+      var target=Math.round(el.scrollTop/ITEM)*ITEM;
+      if(Math.abs(el.scrollTop-target)>1){el.scrollTo({top:target,behavior:'smooth'});return;}
+      var copy=Math.floor(self.idx/n);
+      if(copy<8||copy>COPIES-9) self.goto(MID*n+self.val);
+    }
+    el.addEventListener('scroll',function(){
+      if(Date.now()<lock) return;
+      var idx=Math.max(0,Math.min(n*COPIES-1,Math.round(el.scrollTop/ITEM)));
+      if(idx!==self.idx){self.mark(idx);self.val=idx%n;fromWheels();}
+      clearTimeout(timer); timer=setTimeout(settle,110);
+    },{passive:true});
+  }
+  Wheel.prototype.mark=function(idx){
+    this.items[this.idx].className='it'; this.idx=idx; this.items[idx].className='it on';
+  };
+  Wheel.prototype.goto=function(idx){
+    this.mark(idx); lock=Date.now()+250; this.el.scrollTop=idx*ITEM;
+  };
+  Wheel.prototype.set=function(v){
+    v=Math.max(0,Math.min(this.n-1,v)); this.val=v; this.goto(MID*this.n+v);
+  };
+  var wD=new Wheel('wd',31,false), wH=new Wheel('wh',24,false), wM=new Wheel('wm',60,true);
+
+  /* state: sign (+1 After / -1 Before) and total minutes */
+  var sign=1, total=0, MAX=3650*1440;
+  function clamp(t){return Math.max(0,Math.min(MAX,Math.round(t)||0));}
+  function writePicker(){
+    wD.set(Math.floor(total/1440));
+    wH.set(Math.floor((total%1440)/60));
+    wM.set(total%60);
+    bAfter.setAttribute('aria-pressed',sign>0?'true':'false');
+    bBefore.setAttribute('aria-pressed',sign<0?'true':'false');
+  }
+  function writeText(){
+    if(total===0){q.value='';return;}
+    var d=Math.floor(total/1440), h=Math.floor((total%1440)/60), m=total%60, parts=[];
+    if(d)parts.push(d+'d'); if(h)parts.push(h+'h'); if(m)parts.push(m+'m');
+    q.value=(sign<0?'-':'')+parts.join(' ');
+  }
+  function fromWheels(){
+    total=clamp(wD.val*1440+wH.val*60+wM.val);
+    writeText(); render();
+  }
+
+  function render(){
+    var r=parse(q.value);
+    if(r===undefined){root.classList.remove('calc');res.className='result error';res.innerHTML='বোঝা যায়নি। এভাবে লিখুন: 4h, 30m, 2h 30m';return;}
+    var now=new Date();
+    res.className='result';
+    root.classList.toggle('calc',!!r);
+    if(!r){ /* empty or 0 -> show current time */
+      res.innerHTML='<div class="big">'+fmt(now,false)+'</div><div class="sub">'+bnDate(now)+' '+bn(now.getFullYear())+'</div>';
+      return;
+    }
+    var t=new Date(now.getTime()+r*60000);
+    res.className='result calc';
+    res.innerHTML='<div class="big">'+fmt(t,false)+'</div><div class="sub">'+dateLabel(t,now)+'</div>';
+  }
+  function tick(){render();}
+
+  bAfter.addEventListener('click',function(){sign=1;writePicker();writeText();render();});
+  bBefore.addEventListener('click',function(){sign=-1;writePicker();writeText();render();});
+
+  /* typed text -> wheels */
+  function fromText(){
+    var r=parse(q.value);
+    if(typeof r==='number'){sign=r<0?-1:1;total=clamp(Math.abs(r));writePicker();}
+  }
+  q.addEventListener('input',function(){fromText();render();});
+  document.getElementById('reset').addEventListener('click',function(){
+    sign=1; total=0; q.value=''; writePicker(); render();
+  });
+
+  /* ---- PWA install (banner + Settings button) ---- */
+  var deferred=null;
+  var banner=document.getElementById('ibanner'), ibtn=document.getElementById('ibtn'), idismiss=document.getElementById('idismiss');
+  var sInstall=document.getElementById('sinstall'), sNote=document.getElementById('snote');
+  var gear=document.getElementById('gear'), panel=document.getElementById('panel');
+  var standalone=(window.matchMedia&&matchMedia('(display-mode: standalone)').matches)||window.navigator.standalone===true;
+  function bannerDismissed(){try{return localStorage.getItem('ta-ib')==='1';}catch(e){return false;}}
+  function refreshInstallUI(){
+    if(standalone){sInstall.hidden=true;sNote.textContent='App ইনস্টল করা আছে ✓';banner.hidden=true;return;}
+    if(deferred){sInstall.hidden=false;sNote.textContent='';banner.hidden=bannerDismissed();}
+    else{sInstall.hidden=true;sNote.textContent='Install করতে ব্রাউজার মেনু (⋮) → Install app / Add to Home screen চাপুন।';banner.hidden=true;}
+  }
+  window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();deferred=e;refreshInstallUI();});
+  window.addEventListener('appinstalled',function(){deferred=null;standalone=true;refreshInstallUI();});
+  function doInstall(){
+    if(!deferred) return;
+    deferred.prompt();
+    deferred.userChoice.then(function(){deferred=null;refreshInstallUI();}).catch(function(){});
+  }
+  ibtn.addEventListener('click',doInstall);
+  sInstall.addEventListener('click',doInstall);
+  idismiss.addEventListener('click',function(){banner.hidden=true;try{localStorage.setItem('ta-ib','1');}catch(e){}});
+  gear.addEventListener('click',function(){panel.hidden=!panel.hidden;gear.setAttribute('aria-expanded',panel.hidden?'false':'true');});
+  document.addEventListener('click',function(e){
+    if(!panel.hidden&&!panel.contains(e.target)&&e.target!==gear){panel.hidden=true;gear.setAttribute('aria-expanded','false');}
+  });
+  refreshInstallUI();
+  if('serviceWorker' in navigator){
+    window.addEventListener('load',function(){
+      try{navigator.serviceWorker.register('sw.js').catch(function(){});}catch(e){}
+    });
+  }
+
+  writePicker(); tick(); setInterval(tick,1000);
+})();
+</script>
+</body>
+</html>

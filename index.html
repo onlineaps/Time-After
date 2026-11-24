@@ -25,7 +25,7 @@
 :root.calc{--accent:var(--warm);--accent-ink:var(--warm-ink)}
 *{box-sizing:border-box}
 html,body{margin:0;min-height:100%}
-body{-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent;background:var(--bg);color:var(--ink);font-family:"Segoe UI",system-ui,-apple-system,Roboto,"Noto Sans Bengali",sans-serif;display:flex;justify-content:center;padding:6px 16px 24px;transition:background .25s,color .25s}
+body{-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent;background:var(--bg);color:var(--ink);font-family:"Segoe UI",system-ui,-apple-system,Roboto,"Noto Sans Bengali",sans-serif;display:flex;justify-content:center;padding:6px 16px 100px;transition:background .25s,color .25s}
 .wrap{width:100%;max-width:420px}
 header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
 h1{font-size:20px;margin:0;font-weight:700}
@@ -68,10 +68,46 @@ header{position:relative}
 .ptitle{font-weight:700;margin-bottom:8px}
 .pbtn{width:100%;border:0;background:var(--accent);color:var(--accent-ink);border-radius:12px;padding:11px;font-size:15px;font-weight:600;cursor:pointer}
 .pnote{color:var(--muted);font-size:13px;line-height:1.5}
-.ibanner{position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));max-width:396px;margin:0 auto;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:10px 10px 10px 14px;display:flex;align-items:center;gap:8px;box-shadow:0 6px 24px rgba(0,0,0,.3);z-index:30}
+.ibanner{position:fixed;left:12px;right:12px;bottom:calc(76px + env(safe-area-inset-bottom,0px));max-width:396px;margin:0 auto;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:10px 10px 10px 14px;display:flex;align-items:center;gap:8px;box-shadow:0 6px 24px rgba(0,0,0,.3);z-index:30}
 .itxt{flex:1;font-size:14px;line-height:1.35}
 .ibtn{border:0;background:var(--accent);color:var(--accent-ink);border-radius:10px;padding:9px 14px;font-size:14px;font-weight:600;cursor:pointer}
 .ix{border:0;background:transparent;color:var(--muted);font-size:18px;padding:6px 8px;cursor:pointer}
+#theme{display:inline-flex;align-items:center;gap:6px}
+#gear{display:inline-grid;place-items:center}
+.pbtn{display:flex;align-items:center;justify-content:center;gap:8px}
+.ix{display:grid;place-items:center}
+.tabs{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--line);display:flex;padding-bottom:env(safe-area-inset-bottom,0px);z-index:20}
+.tab{flex:1;border:0;background:transparent;color:var(--muted);padding:10px 0 8px;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:12px;font-weight:600;cursor:pointer}
+.tab span{display:grid}
+.tab[aria-selected="true"]{color:var(--accent)}
+.fab{position:fixed;right:18px;bottom:calc(76px + env(safe-area-inset-bottom,0px));width:56px;height:56px;border-radius:50%;border:0;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;box-shadow:0 6px 18px rgba(0,0,0,.35);z-index:15;cursor:pointer}
+.ucard{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px 14px;margin-bottom:10px}
+.utop{display:flex;align-items:center;gap:6px}
+.uname{flex:1;min-width:0;font-weight:700;font-size:17px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ubtn{border:0;background:transparent;color:var(--muted);padding:6px;border-radius:10px;cursor:pointer;display:flex;align-items:center}
+.ubtn.arm{color:var(--err)}
+.ubtn.arm::after{content:"মুছবেন?";font-size:12px;margin-left:4px}
+.uend{color:var(--muted);font-size:13px;margin-top:2px}
+.urem{font-size:26px;font-weight:700;font-variant-numeric:tabular-nums;margin:6px 0 8px}
+.bar{height:6px;background:var(--soft);border-radius:99px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--accent);border-radius:99px}
+:root{--ok:#1f9d55}
+:root[data-theme="dark"]{--ok:#4cd08a}
+.ucard.done .urem{color:var(--ok);display:flex;align-items:center;gap:8px}
+.ucard.done .bar i{background:var(--ok)}
+.upempty{text-align:center;color:var(--muted);padding:44px 10px;font-size:15px;line-height:1.6}
+.uprow{display:flex;gap:8px;margin-top:6px}
+.ghost{flex:1;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:12px;padding:11px;font-size:14px;font-weight:600;cursor:pointer;display:flex;gap:6px;justify-content:center;align-items:center}
+.sv{flex:1}
+.sheet{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:50;display:flex;align-items:flex-end}
+.sheetbox{width:100%;max-width:420px;margin:0 auto;background:var(--bg);border-radius:20px 20px 0 0;padding:14px 16px calc(16px + env(safe-area-inset-bottom,0px))}
+.sheetbox .seg{display:none}
+.sheetbox .picker{margin-bottom:0}
+.sname{user-select:text;-webkit-user-select:text;width:100%;font-size:18px;padding:12px 14px;border-radius:14px;border:1.5px solid var(--line);background:var(--card);color:var(--ink);margin-bottom:10px}
+.sprev{text-align:center;color:var(--muted);font-size:15px;margin:10px 0 6px;min-height:22px}
+.uphead{display:flex;justify-content:flex-end;margin-bottom:4px}
+.clr{border:0;background:transparent;color:var(--muted);font-size:13px;font-weight:600;display:flex;align-items:center;gap:4px;padding:6px 8px;border-radius:10px;cursor:pointer}
+.clr.arm{color:var(--err)}
 </style>
 </head>
 <body>
@@ -79,16 +115,17 @@ header{position:relative}
   <header>
     <h1>Time After</h1>
     <div class="hbtns">
-      <button id="gear" type="button" aria-label="Settings" aria-expanded="false">⚙</button>
-      <button id="theme" type="button" aria-label="Theme toggle">🌙 Dark</button>
+      <button id="gear" type="button" aria-label="Settings" aria-expanded="false"><span data-ic="gear" data-s="18"></span></button>
+      <button id="theme" type="button" aria-label="Theme toggle"></button>
     </div>
     <div id="panel" class="panel" hidden>
       <div class="ptitle">Settings</div>
-      <button id="sinstall" type="button" class="pbtn" hidden>📲 Install app</button>
+      <button id="sinstall" type="button" class="pbtn" hidden><span data-ic="down" data-s="18"></span> Install app</button>
       <div id="snote" class="pnote"></div>
     </div>
   </header>
 
+  <section id="tab-calc">
   <div id="res" class="result" aria-live="polite"></div>
 
   <div class="qrow">
@@ -108,12 +145,37 @@ header{position:relative}
     </div>
   </div>
 
+  </section>
+
+  <section id="tab-up" hidden>
+    <div class="uphead"><button id="upclear" type="button" class="clr" hidden><span data-ic="trash" data-s="16"></span><span class="clt">Clear all</span></button></div>
+    <div id="uplist"></div>
+    <div id="upempty" class="upempty">এখনো কোনো আপগ্রেড নেই।<br>নিচের কোণার "+" বাটন চাপুন।</div>
+  </section>
+</div>
+
+<nav class="tabs" aria-label="Tabs">
+  <button id="tbcalc" class="tab" type="button" aria-selected="true"><span data-ic="clock" data-s="22"></span>Calculator</button>
+  <button id="tbup" class="tab" type="button" aria-selected="false"><span data-ic="hour" data-s="22"></span>Upgrades</button>
+</nav>
+<button id="fab" class="fab" type="button" aria-label="New upgrade" hidden><span data-ic="plus" data-s="26"></span></button>
+
+<div id="sheet" class="sheet" hidden>
+  <div class="sheetbox">
+    <input id="sname" class="sname" type="text" maxlength="60" autocomplete="off" placeholder="নাম, যেমন: Wizard Tower">
+    <div id="sheetpick"></div>
+    <div id="sprev" class="sprev">সময় বেছে নিন</div>
+    <div class="uprow">
+      <button id="scancel" type="button" class="ghost">Cancel</button>
+      <button id="ssave" type="button" class="pbtn sv">Save</button>
+    </div>
+  </div>
 </div>
 
 <div id="ibanner" class="ibanner" hidden>
-  <div class="itxt">📲 Time After হোম স্ক্রিনে install করুন</div>
+  <div class="itxt">Time After হোম স্ক্রিনে install করুন</div>
   <button id="ibtn" type="button" class="ibtn">Install</button>
-  <button id="idismiss" type="button" class="ix" aria-label="Close">✕</button>
+  <button id="idismiss" type="button" class="ix" aria-label="Close"><span data-ic="close" data-s="18"></span></button>
 </div>
 
 <script>
@@ -128,10 +190,28 @@ header{position:relative}
   function bn(n){return String(n).replace(/\d/g,function(d){return BN_DIGITS[+d];});}
   function bnDate(d){return BN_DAYS[d.getDay()]+', '+bn(d.getDate())+' '+BN_MONTHS[d.getMonth()];}
 
+  /* ---- SVG icons ---- */
+  var IC={
+    gear:'<path d="M4 7h9M17 7h3M4 17h3M11 17h9"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="17" r="2"/>',
+    sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5L19 19M5 19l1.5-1.5M17.5 6.5L19 5"/>',
+    moon:'<path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/>',
+    down:'<path d="M12 4v11M7 11l5 5 5-5M5 20h14"/>',
+    up:'<path d="M12 16V5M7 9l5-5 5 5M5 20h14"/>',
+    plus:'<path d="M12 5v14M5 12h14"/>',
+    trash:'<path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/>',
+    check:'<path d="M5 13l4 4L19 7"/>',
+    redo:'<path d="M4 12a8 8 0 1 0 3-6.2M4 4v5h5"/>',
+    close:'<path d="M6 6l12 12M18 6L6 18"/>',
+    clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+    hour:'<path d="M6 3h12M6 21h12M8 3v4l4 5-4 5v4M16 3v4l-4 5 4 5v4"/>'
+  };
+  function ic(n,sz){sz=sz||20;return '<svg width="'+sz+'" height="'+sz+'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+IC[n]+'</svg>';}
+  Array.prototype.forEach.call(document.querySelectorAll('[data-ic]'),function(e){e.innerHTML=ic(e.getAttribute('data-ic'),+e.getAttribute('data-s')||20);});
+
   /* theme (default light) */
   function setTheme(t){
-    if(t==='dark'){root.setAttribute('data-theme','dark');btn.textContent='☀️ Light';}
-    else{root.removeAttribute('data-theme');btn.textContent='🌙 Dark';}
+    if(t==='dark'){root.setAttribute('data-theme','dark');btn.innerHTML=ic('sun',18)+' Light';}
+    else{root.removeAttribute('data-theme');btn.innerHTML=ic('moon',18)+' Dark';}
     var tm=document.querySelector('meta[name=theme-color]'); if(tm) tm.setAttribute('content',t==='dark'?'#000000':'#f4f6f9');
   }
   var saved=null; try{saved=localStorage.getItem('timeafter-theme');}catch(e){}
@@ -239,7 +319,7 @@ header{position:relative}
   }
   function fromWheels(){
     total=clamp(wD.val*1440+wH.val*60+wM.val);
-    writeText(); render();
+    writeText(); render(); sheetPreview();
   }
 
   function render(){
@@ -247,7 +327,7 @@ header{position:relative}
     if(r===undefined){root.classList.remove('calc');res.className='result error';res.innerHTML='বোঝা যায়নি। এভাবে লিখুন: 4h, 30m, 2h 30m';return;}
     var now=new Date();
     res.className='result';
-    root.classList.toggle('calc',!!r);
+    root.classList.toggle('calc',!!r&&tab==='calc');
     if(!r){ /* empty or 0 -> show current time */
       res.innerHTML='<div class="big">'+fmt(now,false)+'</div><div class="sub">'+bnDate(now)+' '+bn(now.getFullYear())+'</div>';
       return;
@@ -256,7 +336,7 @@ header{position:relative}
     res.className='result calc';
     res.innerHTML='<div class="big">'+fmt(t,false)+'</div><div class="sub">'+dateLabel(t,now)+'</div>';
   }
-  function tick(){render();}
+  function tick(){render();if(tab==='up'&&!sheetOpen)tickUp();}
 
   bAfter.addEventListener('click',function(){sign=1;writePicker();writeText();render();});
   bBefore.addEventListener('click',function(){sign=-1;writePicker();writeText();render();});
@@ -271,6 +351,120 @@ header{position:relative}
     sign=1; total=0; q.value=''; writePicker(); render();
   });
 
+  /* ---- Upgrades tab ---- */
+  var tab='calc', sheetOpen=false, items=[], wasDone={}, SKEY='ta-upgrades', savedCalc=null;
+  var tCalc=document.getElementById('tab-calc'), tUp=document.getElementById('tab-up');
+  var tbCalc=document.getElementById('tbcalc'), tbUp=document.getElementById('tbup'), fab=document.getElementById('fab');
+  var ulist=document.getElementById('uplist'), uempty=document.getElementById('upempty');
+  var sheet=document.getElementById('sheet'), sname=document.getElementById('sname'), sprev=document.getElementById('sprev');
+  var pickerEl=document.querySelector('.picker');
+
+  function normalize(a){
+    return a.filter(function(x){return x&&isFinite(x.end)&&isFinite(x.dur)&&x.dur>0;}).map(function(x,i){
+      return {id:(String(x.id||'').replace(/[^a-z0-9]/gi,'')||('r'+Date.now().toString(36)+i)),
+        name:String(x.name||'Upgrade').slice(0,60),dur:+x.dur,start:+x.start||(+x.end-x.dur*60000),end:+x.end};
+    });
+  }
+  function load(){try{var a=JSON.parse(localStorage.getItem(SKEY)||'[]');items=Array.isArray(a)?normalize(a):[];}catch(e){items=[];}}
+  function save(){try{localStorage.setItem(SKEY,JSON.stringify(items));}catch(e){}}
+  function find(id){for(var i=0;i<items.length;i++){if(items[i].id===id)return items[i];}return null;}
+
+  function durText(ms){
+    var t=Math.max(0,Math.ceil(ms/1000)), d=Math.floor(t/86400), h=Math.floor((t%86400)/3600), m=Math.floor((t%3600)/60), x=t%60, o='';
+    if(d)o+=d+'d ';
+    if(d||h)o+=h+'h ';
+    return o+p2(m)+'m '+p2(x)+'s';
+  }
+  function endLabel(e,n){
+    var diff=Math.round((dayStart(e)-dayStart(n))/86400000);
+    var dl=diff===0?'আজই':diff===1?'আগামীকাল':bn(e.getDate())+' '+BN_MONTHS[e.getMonth()];
+    return fmt(e,false)+' · '+dl;
+  }
+
+  function renderUp(){
+    var now=Date.now();
+    var arr=items.slice().sort(function(a,b){var da=a.end<=now,db=b.end<=now;return da!==db?(da?1:-1):a.end-b.end;});
+    uempty.hidden=arr.length>0; clr.hidden=arr.length===0;
+    ulist.innerHTML=arr.map(function(it){
+      var done=it.end<=now; wasDone[it.id]=done;
+      return '<div class="ucard'+(done?' done':'')+'" data-id="'+it.id+'"><div class="utop"><div class="uname"></div>'+
+        (done?'<button type="button" class="ubtn" data-a="redo" aria-label="Restart">'+ic('redo')+'</button>':'')+
+        '<button type="button" class="ubtn" data-a="del" aria-label="Delete">'+ic('trash')+'</button></div>'+
+        '<div class="uend"></div><div class="urem"></div><div class="bar"><i></i></div></div>';
+    }).join('');
+    Array.prototype.forEach.call(ulist.children,function(c){var it=find(c.getAttribute('data-id'));if(it)c.querySelector('.uname').textContent=it.name;});
+    tickUp();
+  }
+  function tickUp(){
+    var now=Date.now(), again=false;
+    Array.prototype.forEach.call(ulist.children,function(c){
+      var it=find(c.getAttribute('data-id')); if(!it)return;
+      var left=it.end-now, done=left<=0;
+      if(done!==!!wasDone[it.id]){
+        if(done&&navigator.vibrate){try{navigator.vibrate([300,150,300]);}catch(e){}}
+        again=true; return;
+      }
+      c.querySelector('.uend').textContent=endLabel(new Date(it.end),new Date(now));
+      c.querySelector('.urem').innerHTML=done?ic('check',26)+' Complete':durText(left);
+      c.querySelector('.bar i').style.width=(done?100:Math.max(0,Math.min(100,(1-left/(it.dur*60000))*100)))+'%';
+    });
+    if(again)renderUp();
+  }
+  ulist.addEventListener('click',function(e){
+    var b=e.target.closest?e.target.closest('[data-a]'):null; if(!b)return;
+    var it=find(b.closest('.ucard').getAttribute('data-id')); if(!it)return;
+    if(b.getAttribute('data-a')==='redo'){it.end=Date.now()+it.dur*60000;save();renderUp();return;}
+    if(!b.classList.contains('arm')){b.classList.add('arm');setTimeout(function(){b.classList.remove('arm');},2500);return;}
+    items=items.filter(function(x){return x!==it;});save();renderUp();
+  });
+
+  function relayout(){lock=Date.now()+500;requestAnimationFrame(function(){writePicker();});}
+  function setTab(t){
+    tab=t; tCalc.hidden=(t!=='calc'); tUp.hidden=(t!=='up'); fab.hidden=(t!=='up');
+    tbCalc.setAttribute('aria-selected',t==='calc'?'true':'false');
+    tbUp.setAttribute('aria-selected',t==='up'?'true':'false');
+    if(t==='calc')relayout();
+    render(); if(t==='up')renderUp();
+  }
+  tbCalc.addEventListener('click',function(){setTab('calc');});
+  tbUp.addEventListener('click',function(){setTab('up');});
+
+  function sheetPreview(){
+    if(!sheetOpen)return;
+    if(total<=0){sprev.textContent='সময় বেছে নিন';return;}
+    var n=new Date(), e=new Date(n.getTime()+total*60000);
+    sprev.textContent='শেষ হবে '+fmt(e,false)+' · '+dateLabel(e,n);
+  }
+  function openSheet(){
+    savedCalc={sign:sign,total:total,q:q.value};
+    sign=1; total=0; q.value=''; sname.value='';
+    sheetOpen=true; sheet.hidden=false;
+    document.getElementById('sheetpick').appendChild(pickerEl);
+    relayout(); sheetPreview();
+  }
+  function closeSheet(){
+    sheetOpen=false; sheet.hidden=true; tCalc.appendChild(pickerEl);
+    if(savedCalc){sign=savedCalc.sign;total=savedCalc.total;q.value=savedCalc.q;}
+    relayout(); render();
+  }
+  fab.addEventListener('click',openSheet);
+  document.getElementById('scancel').addEventListener('click',closeSheet);
+  sheet.addEventListener('click',function(e){if(e.target===sheet)closeSheet();});
+  document.getElementById('ssave').addEventListener('click',function(){
+    if(total<=0){sprev.textContent='আগে সময় বেছে নিন';return;}
+    var now=Date.now(), dur=total;
+    items.push({id:now.toString(36)+Math.floor(Math.random()*46656).toString(36),name:(sname.value.trim()||'Upgrade').slice(0,60),dur:dur,start:now,end:now+dur*60000});
+    save(); closeSheet(); renderUp();
+  });
+
+  var clr=document.getElementById('upclear'), clt=clr.querySelector('.clt');
+  function clrReset(){clr.classList.remove('arm');clt.textContent='Clear all';}
+  clr.addEventListener('click',function(){
+    if(!clr.classList.contains('arm')){clr.classList.add('arm');clt.textContent='সব মুছবেন? আবার চাপুন';setTimeout(clrReset,2500);return;}
+    items=[];save();clrReset();renderUp();
+  });
+  load(); renderUp();
+
   /* ---- PWA install (banner + Settings button) ---- */
   var deferred=null;
   var banner=document.getElementById('ibanner'), ibtn=document.getElementById('ibtn'), idismiss=document.getElementById('idismiss');
@@ -279,7 +473,7 @@ header{position:relative}
   var standalone=(window.matchMedia&&matchMedia('(display-mode: standalone)').matches)||window.navigator.standalone===true;
   function bannerDismissed(){try{return localStorage.getItem('ta-ib')==='1';}catch(e){return false;}}
   function refreshInstallUI(){
-    if(standalone){sInstall.hidden=true;sNote.textContent='App ইনস্টল করা আছে ✓';banner.hidden=true;return;}
+    if(standalone){sInstall.hidden=true;sNote.textContent='App ইনস্টল করা আছে';banner.hidden=true;return;}
     if(deferred){sInstall.hidden=false;sNote.textContent='';banner.hidden=bannerDismissed();}
     else{sInstall.hidden=true;sNote.textContent='Install করতে ব্রাউজার মেনু (⋮) → Install app / Add to Home screen চাপুন।';banner.hidden=true;}
   }

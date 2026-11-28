@@ -1,5 +1,5 @@
-/* Time After service worker. index.html বদলালে CACHE নামের version বাড়ান (v10 -> v11) */
-var CACHE='time-after-v10';
+/* Time After service worker. index.html বদলালে CACHE নামের version বাড়ান (v14 -> v15) */
+var CACHE='time-after-v14';
 var ASSETS=['./','./index.html','./manifest.json','./icon-192.png','./icon-512.png','./icon-512-maskable.png'];
 
 self.addEventListener('install',function(e){
